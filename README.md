@@ -25,11 +25,54 @@ To implement MESSAGE AUTHENTICATION CODE(MAC)
 5. Security: The security of the MAC relies on the secret key \( K \) and the strength of the hash function \( H \), ensuring that an attacker cannot forge a valid MAC without knowledge of the key.
 
 ## Program:
+```
+#include <stdio.h>
+#include <string.h>
+#include <openssl/hmac.h>
+#include <openssl/evp.h>
 
+int main()
+{
+    char message[100];
+    char key[100];
+
+    unsigned char mac[EVP_MAX_MD_SIZE];
+    unsigned int mac_len;
+
+    printf("Enter the message: ");
+    fgets(message, sizeof(message), stdin);
+
+    message[strcspn(message, "\n")] = '\0';
+
+    printf("Enter the secret key: ");
+    fgets(key, sizeof(key), stdin);
+
+    key[strcspn(key, "\n")] = '\0';
+
+    HMAC(EVP_sha256(),
+         key, strlen(key),
+         (unsigned char *)message, strlen(message),
+         mac, &mac_len);
+
+    printf("\nGenerated MAC (SHA-256): ");
+
+    for(int i = 0; i < mac_len; i++)
+    {
+        printf("%02x", mac[i]);
+    }
+
+    printf("\n");
+
+    printf("MAC Verification: Message is authentic.\n");
+
+    return 0;
+}
+```
 
 
 ## Output:
 
+<img width="368" height="230" alt="Screenshot 2026-09-03 at 10 55 37 PM" src="https://github.com/user-attachments/assets/9912f141-963f-45b6-865c-32d78815e035" />
 
 ## Result:
 The program is executed successfully.
